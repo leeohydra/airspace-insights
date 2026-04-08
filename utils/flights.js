@@ -47,7 +47,7 @@ async function fetchFlights(lat, lon, radiusKm) {
 
   const response = await axios.get(`${BASE_URL}/states/all`, {
     params,
-    timeout: 9000,
+    timeout: 30000,
     ...axiosAuthConfig(),
   });
   return response.data;
@@ -118,7 +118,7 @@ async function fetchAircraftRoute(icao24) {
   try {
     const { data } = await axios.get(`${BASE_URL}/flights/aircraft`, {
       params: { icao24: hex, begin, end },
-      timeout: 4000,
+      timeout: 10000,
       ...axiosAuthConfig(),
     });
     if (!Array.isArray(data) || data.length === 0) return null;
