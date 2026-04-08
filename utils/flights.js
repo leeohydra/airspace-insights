@@ -45,7 +45,7 @@ async function fetchFlights(lat, lon, radiusKm) {
       lomin: bbox.lomin.toFixed(4),
       lomax: bbox.lomax.toFixed(4),
     },
-    timeout: 15000,
+    timeout: 8000,
     ...axiosAuthConfig(),
   };
 
@@ -118,7 +118,7 @@ async function fetchAircraftRoute(icao24) {
   try {
     const { data } = await axios.get(`${BASE_URL}/flights/aircraft`, {
       params: { icao24: hex, begin, end },
-      timeout: 15000,
+      timeout: 4000,
       ...axiosAuthConfig(),
     });
     if (!Array.isArray(data) || data.length === 0) return null;
@@ -153,7 +153,10 @@ async function getInsights(lat, lon, radiusKm) {
   const data = await fetchFlights(lat, lon, radiusKm);
   const flights = processFlights(data, lat, lon, radiusKm);
 
-  await enrichFlightsWithRoutes(flights);
+  // Skip route enrichment in serverless environments (too slow for Vercel's 10s limit)
+  if (!process.env.VERCEL) {
+    await enrichFlightsWithRoutes(flights);
+  }
 
   const counts = { landing: 0, "mid-flight": 0, cruising: 0, unknown: 0 };
   flights.forEach((f) => counts[f.classification]++);
