@@ -35,6 +35,9 @@ app.get("/api/countries", async (req, res) => {
   }
 });
 
+// Warm-up endpoint — no-op, just keeps the function alive
+app.get("/api/ping", (req, res) => res.json({ ok: true }));
+
 app.get("/api/flights", async (req, res) => {
   const lat = parseFloat(req.query.lat);
   const lon = parseFloat(req.query.lon);

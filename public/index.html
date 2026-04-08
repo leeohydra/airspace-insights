@@ -892,6 +892,8 @@
     // ── Boot ──
     async function boot() {
       initMap();
+      // Warm up the serverless function immediately so it's ready when user clicks Scan
+      fetch("/api/ping").catch(() => {});
       await initCountries();
     }
     boot();

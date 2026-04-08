@@ -1,12 +1,10 @@
 {
   "version": 2,
+  "regions": ["fra1"],
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
