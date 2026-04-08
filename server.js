@@ -50,13 +50,18 @@ app.get("/api/flights", async (req, res) => {
     return res.status(400).json({ error: "radius must be between 1 and 500 km" });
   }
 
+  // Send headers early so Vercel doesn't kill the connection during the API call
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Transfer-Encoding", "chunked");
+  res.flushHeaders();
+
   try {
     const insights = await getInsights(lat, lon, radius);
-    res.json(insights);
+    res.end(JSON.stringify(insights));
   } catch (err) {
     const status = err.response?.status || 500;
     const message = err.response?.statusText || err.message;
-    res.status(status).json({ error: message });
+    res.end(JSON.stringify({ error: message }));
   }
 });
 

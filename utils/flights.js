@@ -45,17 +45,12 @@ async function fetchFlights(lat, lon, radiusKm) {
     lomax: bbox.lomax.toFixed(4),
   };
 
-  // Race authenticated vs anonymous — whoever responds first wins
-  const authReq = axios.get(`${BASE_URL}/states/all`, { params, timeout: 9000, ...axiosAuthConfig() });
-
-  if (CLIENT_ID && CLIENT_SECRET) {
-    const anonReq = axios.get(`${BASE_URL}/states/all`, { params, timeout: 9000 });
-    const result = await Promise.any([authReq, anonReq]);
-    return result.data;
-  }
-
-  const result = await authReq;
-  return result.data;
+  const response = await axios.get(`${BASE_URL}/states/all`, {
+    params,
+    timeout: 9000,
+    ...axiosAuthConfig(),
+  });
+  return response.data;
 }
 
 /**

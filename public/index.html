@@ -779,7 +779,7 @@
       try {
         const res = await fetch(`/api/flights?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&radius=${encodeURIComponent(radius)}`);
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "API error");
+        if (data.error) throw new Error(data.error);
 
         lastFullInsights = data;
         visibleCount = 20;
