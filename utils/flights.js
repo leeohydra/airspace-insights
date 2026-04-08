@@ -38,19 +38,32 @@ function axiosAuthConfig() {
 async function fetchFlights(lat, lon, radiusKm) {
   const bbox = boundingBox(lat, lon, radiusKm);
 
-  const config = {
-    params: {
-      lamin: bbox.lamin.toFixed(4),
-      lamax: bbox.lamax.toFixed(4),
-      lomin: bbox.lomin.toFixed(4),
-      lomax: bbox.lomax.toFixed(4),
-    },
-    timeout: 8000,
-    ...axiosAuthConfig(),
+  const params = {
+    lamin: bbox.lamin.toFixed(4),
+    lamax: bbox.lamax.toFixed(4),
+    lomin: bbox.lomin.toFixed(4),
+    lomax: bbox.lomax.toFixed(4),
   };
 
-  const response = await axios.get(`${BASE_URL}/states/all`, config);
-  return response.data;
+  // Try authenticated first, fall back to anonymous (sometimes faster)
+  try {
+    const response = await axios.get(`${BASE_URL}/states/all`, {
+      params,
+      timeout: 9000,
+      ...axiosAuthConfig(),
+    });
+    return response.data;
+  } catch (err) {
+    if (CLIENT_ID && CLIENT_SECRET) {
+      // Retry without auth — anonymous requests can be faster
+      const response = await axios.get(`${BASE_URL}/states/all`, {
+        params,
+        timeout: 9000,
+      });
+      return response.data;
+    }
+    throw err;
+  }
 }
 
 /**

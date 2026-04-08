@@ -801,7 +801,8 @@
         lastFullInsights = null; clearFlightMarkers();
         $("sheetTitle").textContent = "Error";
         $("sheetSub").textContent = "";
-        $("sheetBody").innerHTML = `<div class="status-msg error">${escapeHtml(e.message)}</div>`;
+        const isTimeout = /timeout/i.test(e.message);
+        $("sheetBody").innerHTML = `<div class="status-msg error">${escapeHtml(e.message)}<br><br>${isTimeout ? '<span style="color:var(--text-muted);font-size:13px">OpenSky API is slow right now. Try a smaller radius or try again.</span><br><br>' : ''}<button class="show-more-btn" onclick="search()" style="margin:0 auto;max-width:200px">Retry</button></div>`;
         setSheetState("peek");
       } finally {
         btn.disabled = false; btn.classList.remove("scanning"); btn.textContent = "Scan Airspace";
