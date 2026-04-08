@@ -1,0 +1,15 @@
+{
+  "name": "airspace-insights-tool",
+  "version": "1.0.0",
+  "description": "CLI tool to fetch and analyze real-time flight data using OpenSky Network API",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "web": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0"
+  }
+}
